@@ -1,4 +1,4 @@
-SVG/Graph version 0.01
+SVG/Graph version 0.02
 ======================
 
 SVG::Graph - Visualize your data in Scalable Vector Graphics (SVG) format.
@@ -20,7 +20,7 @@ as N-ary rooted trees.  Data may be represented as:
  Spline Graph		x
  Tree					x
 
-SVG::Graph 0.01 is a pre-alpha release. Keep in mind that many of the
+SVG::Graph 0.02 is a pre-alpha release. Keep in mind that many of the
 glyphs are not very robust. 
 
 INSTALLATION
@@ -49,6 +49,8 @@ visit the project page at http://www.sf.net/projects/svg-graph
 
 COPYRIGHT AND LICENCE
 
-Copyright (C) 2002-2003 Allen Day <allenday@ucla.edu>,
-Chris To <crsto@ucla.edu>
+License: Artistic 2.0
+
+Copyright: 2002-2007 Allen Day <allenday@ucla.edu>, Chris To
+<crsto@ucla.edu>
 

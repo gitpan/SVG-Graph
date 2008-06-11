@@ -49,3 +49,4 @@ t/line.t
 t/scatter.t
 t/tree.t
 t/wedge.t
+META.yml                                 Module meta-data (added by MakeMaker)

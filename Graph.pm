@@ -64,7 +64,7 @@ well as N-ary rooted trees.  Data may be represented as:
  Spline Graph		x
  Tree					x
 
-SVG::Graph 0.01 is a pre-alpha release. Keep in mind that many of the
+SVG::Graph 0.02 is a pre-alpha release. Keep in mind that many of the
 glyphs are not very robust. 
 
 =head1 PLOTTING
@@ -138,7 +138,7 @@ use SVG::Graph::Frame;
 
 use Data::Dumper;
 use strict;
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 =head2 new
 
