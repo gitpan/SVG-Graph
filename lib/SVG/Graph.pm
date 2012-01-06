@@ -1,8 +1,148 @@
 package SVG::Graph;
+BEGIN {
+  $SVG::Graph::AUTHORITY = 'cpan:CJFIELDS';
+}
+
+our $VERSION = '0.03'; # VERSION
+
+
+use SVG;
+use SVG::Graph::Frame;
+
+use Data::Dumper;
+use strict;
+
+
+sub new {
+    my ( $class, @args ) = @_;
+
+    my $self = bless {}, $class;
+    $self->init(@args);
+    return $self;
+}
+
+
+sub init {
+    my ( $self, %args ) = @_;
+
+    foreach my $arg ( keys %args ) {
+        my $meth = $arg;
+        $self->$meth( $args{$arg} );
+    }
+
+    #allow passing of an existing SVG
+    if ( !$self->svg ) {
+        $self->svg(
+            SVG->new(
+                xmlns  => "http://www.w3.org/2000/svg",
+                width  => $self->width,
+                height => $self->height
+            )
+        );
+    }
+}
+
+
+sub width {
+    my $self = shift;
+
+    return $self->{'width'} = shift if @_;
+    return $self->{'width'};
+}
+
+
+sub height {
+    my $self = shift;
+
+    return $self->{'height'} = shift if @_;
+    return $self->{'height'};
+}
+
+
+sub margin {
+    my $self = shift;
+
+    return $self->{'margin'} = shift if @_;
+    return $self->{'margin'};
+}
+
+
+sub svg {
+    my $self = shift;
+
+    return $self->{'svg'} = shift if @_;
+    return $self->{'svg'};
+}
+
+
+sub add_frame {
+    my ( $self, %args ) = @_;
+
+    my $margin  = $self->margin  || 0;
+    my $height  = $self->height  || 0;
+    my $width   = $self->width   || 0;
+    my $xoffset = $self->xoffset || 0;
+    my $yoffset = $self->yoffset || 0;
+
+    my $frame = SVG::Graph::Frame->new(
+        svg     => $self,
+        xoffset => $xoffset + $margin,
+        yoffset => $yoffset + $margin,
+        xsize => $width -  ( 2 * $margin ),
+        ysize => $height - ( 2 * $margin ),
+        frame_transform => $args{frame_transform}
+    );
+
+    #print STDERR Dumper($frame);
+
+    push @{ $self->{frames} }, $frame;
+    return $frame;
+}
+
+
+sub frames {
+    my ( $self, @args ) = @_;
+
+    return $self->{frames} ? @{ $self->{frames} } : ();
+}
+
+
+sub xoffset {
+    my $self = shift;
+
+    return $self->{'xoffset'} = shift if @_;
+    return $self->{'xoffset'};
+}
+
+
+sub yoffset {
+    my $self = shift;
+
+    return $self->{'yoffset'} = shift if @_;
+    return $self->{'yoffset'};
+}
+
+
+sub draw {
+    my ( $self, @args ) = @_;
+
+    foreach my $frame ( $self->frames ) {
+        $frame->draw;
+    }
+
+    return $self->svg->xmlify;
+}
+
+1;
+
+
+=pod
+
+=encoding utf-8
 
 =head1 NAME
 
-SVG::Graph - Visualize your data in Scalable Vector Graphics (SVG) format.
+SVG::Graph
 
 =head1 SYNOPSIS
 
@@ -65,7 +205,11 @@ well as N-ary rooted trees.  Data may be represented as:
  Tree					x
 
 SVG::Graph 0.02 is a pre-alpha release. Keep in mind that many of the
-glyphs are not very robust. 
+glyphs are not very robust.
+
+=head1 NAME
+
+SVG::Graph - Visualize your data in Scalable Vector Graphics (SVG) format.
 
 =head1 PLOTTING
 
@@ -126,19 +270,11 @@ visit the project page at http://www.sf.net/projects/svg-graph
 
  James Chen,     <chenj@seas.ucla.edu>
  Brian O'Connor, <boconnor@ucla.edu>
+ Chris Fields,   cjfields at bioperl dot org
 
 =head1 SEE ALSO
 
 L<SVG>
-
-=cut
-
-use SVG;
-use SVG::Graph::Frame;
-
-use Data::Dumper;
-use strict;
-our $VERSION = '0.02';
 
 =head2 new
 
@@ -148,20 +284,9 @@ our $VERSION = '0.02';
                                        margin=>20);
  Function: creates a new SVG::Graph object
  Returns : a SVG::Graph object
- Args    : width => the width of the SVG 
+ Args    : width => the width of the SVG
            height => the height of the SVG
            margin => margin for the root frame
-
-
-=cut
-
-sub new{
-   my ($class,@args) = @_;
-
-   my $self = bless {}, $class;
-   $self->init(@args);
-   return $self;
-}
 
 =head2 init
 
@@ -169,101 +294,44 @@ sub new{
  Usage   :
  Function:
  Example :
- Returns : 
+ Returns :
  Args    :
-
-
-=cut
-
-sub init{
-  my($self, %args) = @_;
-
-  foreach my $arg (keys %args){
-	my $meth = $arg;
-        $self->$meth($args{$arg});
-  }
-
-  #allow passing of an existing SVG
-  if(!$self->svg){
-	$self->svg(SVG->new(xmlns=>"http://www.w3.org/2000/svg",width=>$self->width,height=>$self->height));
-  }
-}
 
 =head2 width
 
  Title   : width
  Usage   : $obj->width($newval)
- Function: 
- Example : 
+ Function:
+ Example :
  Returns : value of width (a scalar)
  Args    : on set, new value (a scalar or undef, optional)
-
-
-=cut
-
-sub width{
-    my $self = shift;
-
-    return $self->{'width'} = shift if @_;
-    return $self->{'width'};
-}
 
 =head2 height
 
  Title   : height
  Usage   : $obj->height($newval)
- Function: 
- Example : 
+ Function:
+ Example :
  Returns : value of height (a scalar)
  Args    : on set, new value (a scalar or undef, optional)
-
-
-=cut
-
-sub height{
-    my $self = shift;
-
-    return $self->{'height'} = shift if @_;
-    return $self->{'height'};
-}
 
 =head2 margin
 
  Title   : margin
  Usage   : $obj->margin($newval)
- Function: 
- Example : 
+ Function:
+ Example :
  Returns : value of margin (a scalar)
  Args    : on set, new value (a scalar or undef, optional)
-
-
-=cut
-
-sub margin{
-    my $self = shift;
-
-    return $self->{'margin'} = shift if @_;
-    return $self->{'margin'};
-}
 
 =head2 svg
 
  Title   : svg
  Usage   : $obj->svg($newval)
- Function: 
- Example : 
+ Function:
+ Example :
  Returns : value of svg (a scalar)
  Args    : on set, new value (a scalar or undef, optional)
-
-
-=cut
-
-sub svg{
-    my $self = shift;
-
-    return $self->{'svg'} = shift if @_;
-    return $self->{'svg'};
-}
 
 =head2 add_frame
 
@@ -278,108 +346,54 @@ sub svg{
                'right' points top position towards right
                'left' points top position towards left
 
-=cut
-
-sub add_frame{
-   my ($self,%args) = @_;
-
-   my $margin = $self->margin || 0;
-   my $height = $self->height || 0;
-   my $width  = $self->width  || 0;
-   my $xoffset = $self->xoffset || 0;
-   my $yoffset = $self->yoffset || 0;
-
-   my $frame = SVG::Graph::Frame->new(svg=>$self,
-									  xoffset=>$xoffset + $margin,
-									  yoffset=>$yoffset + $margin,
-									  xsize=>$width  - (2 * $margin),
-									  ysize=>$height - (2 * $margin),
-									  frame_transform=>$args{frame_transform}
-									 );
-
-   #print STDERR Dumper($frame);
-
-   push @{$self->{frames}}, $frame;
-   return $frame;
-}
-
 =head2 frames
 
  Title   : frames
  Usage   : get/set
  Function:
  Example :
- Returns : 
+ Returns :
  Args    :
-
-
-=cut
-
-sub frames{
-   my ($self,@args) = @_;
-
-   return $self->{frames} ? @{$self->{frames}} : ();
-}
 
 =head2 xoffset
 
  Title   : xoffset
  Usage   : $obj->xoffset($newval)
- Function: 
- Example : 
+ Function:
+ Example :
  Returns : value of xoffset (a scalar)
  Args    : on set, new value (a scalar or undef, optional)
-
-
-=cut
-
-sub xoffset{
-    my $self = shift;
-
-    return $self->{'xoffset'} = shift if @_;
-    return $self->{'xoffset'};
-}
 
 =head2 yoffset
 
  Title   : yoffset
  Usage   : $obj->yoffset($newval)
- Function: 
- Example : 
+ Function:
+ Example :
  Returns : value of yoffset (a scalar)
  Args    : on set, new value (a scalar or undef, optional)
-
-
-=cut
-
-sub yoffset{
-    my $self = shift;
-
-    return $self->{'yoffset'} = shift if @_;
-    return $self->{'yoffset'};
-}
 
 =head2 draw
 
  Title   : draw
  Usage   : $graph=>draw
- Function: depends on child glyph implementations 
+ Function: depends on child glyph implementations
  Returns : xmlifyied SVG object
  Args    : none
 
+=head1 AUTHOR
+
+Chris Fields <cjfields@bioperl.org>
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is Copyright (c) 2012 by Chris Fields.
+
+This is free software, licensed under:
+
+  The Artistic License 2.0 (GPL Compatible)
 
 =cut
 
-sub draw{
-   my ($self,@args) = @_;
 
-   foreach my $frame ($self->frames){
-	 $frame->draw;
-   }
-
-   return $self->svg->xmlify;
-}
-
-
-1;
 __END__
