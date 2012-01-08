@@ -3,7 +3,7 @@ BEGIN {
   $SVG::Graph::AUTHORITY = 'cpan:CJFIELDS';
 }
 
-our $VERSION = '0.03'; # VERSION
+our $VERSION = '0.04'; # VERSION
 
 
 use SVG;

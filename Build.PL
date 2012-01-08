@@ -7,7 +7,11 @@ use Module::Build 0.3601;
 
 my %module_build_args = (
   "build_requires" => {
-    "Module::Build" => "0.3601"
+    "File::Find" => 0,
+    "File::Temp" => 0,
+    "Module::Build" => "0.3601",
+    "Test::More" => 0,
+    "warnings" => 0
   },
   "configure_requires" => {
     "Module::Build" => "0.3601"
@@ -17,12 +21,22 @@ my %module_build_args = (
     "Chris Fields <cjfields\@bioperl.org>"
   ],
   "dist_name" => "SVG-Graph",
-  "dist_version" => "0.03",
+  "dist_version" => "0.04",
   "license" => "artistic_2",
   "module_name" => "SVG::Graph",
   "recommends" => {},
   "recursive_test_files" => 1,
-  "requires" => {},
+  "requires" => {
+    "Data::Dumper" => 0,
+    "Math::Derivative" => 0,
+    "Math::Spline" => 0,
+    "SVG" => 0,
+    "Statistics::Descriptive" => 0,
+    "Tree::DAG_Node" => 0,
+    "base" => 0,
+    "constant" => 0,
+    "strict" => 0
+  },
   "script_files" => []
 );
 

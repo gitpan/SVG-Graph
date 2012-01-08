@@ -23,6 +23,27 @@
          "requires" : {
             "Module::Build" : "0.3601"
          }
+      },
+      "runtime" : {
+         "requires" : {
+            "Data::Dumper" : 0,
+            "Math::Derivative" : 0,
+            "Math::Spline" : 0,
+            "SVG" : 0,
+            "Statistics::Descriptive" : 0,
+            "Tree::DAG_Node" : 0,
+            "base" : 0,
+            "constant" : 0,
+            "strict" : 0
+         }
+      },
+      "test" : {
+         "requires" : {
+            "File::Find" : 0,
+            "File::Temp" : 0,
+            "Test::More" : 0,
+            "warnings" : 0
+         }
       }
    },
    "release_status" : "stable",
@@ -38,7 +59,7 @@
          "web" : "http://github.com/cjfields/svg-graph"
       }
    },
-   "version" : "0.03",
+   "version" : "0.04",
    "x_Dist_Zilla" : {
       "plugins" : [
          {
@@ -149,7 +170,7 @@
          {
             "class" : "Dist::Zilla::Plugin::Authority",
             "name" : "@CJFIELDS/Authority",
-            "version" : "1.005"
+            "version" : "1.006"
          },
          {
             "class" : "Dist::Zilla::Plugin::EOLTests",
@@ -160,6 +181,22 @@
             "class" : "Dist::Zilla::Plugin::PodWeaver",
             "name" : "@CJFIELDS/PodWeaver",
             "version" : "3.101641"
+         },
+         {
+            "class" : "Dist::Zilla::Plugin::AutoPrereqs",
+            "name" : "AutoPrereqs",
+            "version" : "4.300006"
+         },
+         {
+            "class" : "Dist::Zilla::Plugin::Prereqs",
+            "config" : {
+               "Dist::Zilla::Plugin::Prereqs" : {
+                  "phase" : "runtime",
+                  "type" : "requires"
+               }
+            },
+            "name" : "Prereqs",
+            "version" : "4.300006"
          },
          {
             "class" : "Dist::Zilla::Plugin::FinderCode",
